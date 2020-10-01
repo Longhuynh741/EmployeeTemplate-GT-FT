@@ -202,6 +202,13 @@ function promptUser() {
           type: "input",
           name: "name",
           message: "What is your Intern's name?",
+          validate: (answer) => {
+            if (answer !== "") {
+              return true;
+            } else {
+              return "Please enter a name";
+            }
+          },
         },
         {
           type: "input",
