@@ -17,179 +17,256 @@ const membersArray = [];
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 function promptUser() {
-    return inquirer
-        .prompt([
-            {
-                type: "list",
-                name: "role",
-                message: "What is your role?",
-                choices: ["Engineer", "Manager", "Intern"],
-            },
-        ])
-        .then(function (answers) {
-            if (answers.role === "Engineer") {
-                questionEngineer();
-            } else if (answers.role === "Manager") {
-                questionManager();
-            } else if (answers.role === "Intern") {
-                questionIntern();
-            }
-        });
+  return inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "role",
+        message: "What is your role?",
+        choices: ["Engineer", "Manager", "Intern"],
+      },
+    ])
+    .then(function (answers) {
+      if (answers.role === "Engineer") {
+        questionEngineer();
+      } else if (answers.role === "Manager") {
+        questionManager();
+      } else if (answers.role === "Intern") {
+        questionIntern();
+      }
+    });
 
-    function questionEngineer() {
-        inquirer
-            .prompt([
-                {
-                    type: "input",
-                    name: "name",
-                    message: "What is your Engineer's name?",
-                },
-                {
-                    type: "input",
-                    name: "email",
-                    message: "What is your Engineer's Email?",
-                },
-                {
-                    type: "input",
-                    name: "id",
-                    message: "What is your Engineer's employee Id?",
-                },
-                {
-                    type: "input",
-                    name: "github",
-                    message: "What is your Engineer's GitHub url?",
-                },
-                {
-                    type: "list",
-                    name: "continue",
-                    message: "Do you want to continue to add more members?",
-                    choices: ["No", "Yes"],
-                },
-            ])
-            .then((answers) => {
-                const engineer = new Engineer(
-                    answers.name,
-                    answers.email,
-                    answers.id,
-                    answers.github
-                );
-                membersArray.push(engineer);
-                if (answers.continue === "Yes") {
-                    promptUser();
-                } else {
-                
-                    console.log(membersArray);
-                    fs.writeFile(outputPath, render(membersArray), function (err) {
-                        if (err) {
-                            console.log(err);
-                        }
-                        console.log("Success");
-                    });
-                }
-            });
-    }
-    function questionManager() {
-        inquirer
-            .prompt([
-                {
-                    type: "input",
-                    name: "name",
-                    message: "What is your Manager's name?",
-                },
-                {
-                    type: "input",
-                    name: "email",
-                    message: "What is your Manager's Email?",
-                },
-                {
-                    type: "input",
-                    name: "id",
-                    message: "What is your Manager's employee Id?",
-                },
-                {
-                    type: "input",
-                    name: "officeNumber",
-                    message: "What is your office number?",
-                },
-                {
-                    type: "list",
-                    name: "continue",
-                    message: "Do you want to continue to add more members?",
-                    choices: ["No", "Yes"],
-                },
-            ])
-            .then((answers) => {
-                const manager = new Manager(
-                    answers.name,
-                    answers.email,
-                    answers.id,
-                    answers.officeNumber
-                );
-                membersArray.push(manager);
-                if (answers.continue === "Yes") {
-                    promptUser();
-                } else {
-                
-                    console.log(membersArray);
-                    fs.writeFile(outputPath, render(membersArray), function (err) {
-                        if (err) {
-                            console.log(err);
-                        }
-                        console.log("Success");
-                    });
-                }
-            });
-    }
-    function questionIntern() {
-        inquirer.prompt([
-            {
-                type: "input",
-                name: "name",
-                message: "What is your Intern's name?",
-            },
-            {
-                type: "input",
-                name: "email",
-                message: "What is your Intern's Email?",
-            },
-            {
-                type: "input",
-                name: "id",
-                message: "What is your Intern's employee Id?",
-            },
-            {
-                type: "input",
-                name: "school",
-                message: "What is your school's name?",
-            },
-            {
-                type: "list",
-                name: "continue",
-                message: "Do you want to continue to add more members?",
-                choices: ["No", "Yes"],
-            },
-        ]).then((answers) => {
-            const intern = new Intern(
-                answers.name,
-                answers.email,
-                answers.id,
-                answers.school
-            );
-            membersArray.push(intern);
-            if (answers.continue === "Yes") {
-                promptUser();
+  function questionEngineer() {
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          name: "name",
+          message: "What is your Engineer's name?",
+          validate: (answer) => {
+            if (answer !== "") {
+              return true;
             } else {
-            
-                console.log(membersArray);
-                fs.writeFile(outputPath, render(membersArray), function (err) {
-                    if (err) {
-                        console.log(err);
-                    }
-                    console.log("Success");
-                });
+              return "Please enter a name";
             }
-        });
-    }
+          },
+        },
+        {
+          type: "input",
+          name: "email",
+          message: "What is your Engineer's Email?",
+          validate: (answer) => {
+            if (answer !== "") {
+              return true;
+            } else {
+              return "Please enter an email";
+            }
+          },
+        },
+
+        {
+          type: "input",
+          name: "id",
+          message: "What is your Engineer's employee Id?",
+          validate: (answer) => {
+            if (answer !== "") {
+              return true;
+            } else {
+              return "Please enter an Id number";
+            }
+          },
+        },
+        {
+          type: "input",
+          name: "github",
+          message: "What is your Engineer's GitHub url?",
+          validate: (answer) => {
+            if (answer !== "") {
+              return true;
+            } else {
+              return "Please enter a GitHub url";
+            }
+          },
+        },
+        {
+          type: "list",
+          name: "continue",
+          message: "Do you want to continue to add more members?",
+          choices: ["No", "Yes"],
+        },
+      ])
+      .then((answers) => {
+        const engineer = new Engineer(
+          answers.name,
+          answers.email,
+          answers.id,
+          answers.github
+        );
+        membersArray.push(engineer);
+        if (answers.continue === "Yes") {
+          promptUser();
+        } else {
+          console.log(membersArray);
+          fs.writeFile(outputPath, render(membersArray), function (err) {
+            if (err) {
+              console.log(err);
+            }
+            console.log("Success");
+          });
+        }
+      });
+  }
+  function questionManager() {
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          name: "name",
+          message: "What is your Manager's name?",
+          validate: (answer) => {
+            if (answer !== "") {
+              return true;
+            } else {
+              return "Please enter a name";
+            }
+          },
+        },
+        {
+          type: "input",
+          name: "email",
+          message: "What is your Manager's Email?",
+          validate: (answer) => {
+            if (answer !== "") {
+              return true;
+            } else {
+              return "Please enter an email";
+            }
+          },
+        },
+        {
+          type: "input",
+          name: "id",
+          message: "What is your Manager's employee Id?",
+          validate: (answer) => {
+            if (answer !== "") {
+              return true;
+            } else {
+              return "Please enter an Id number";
+            }
+          },
+        },
+        {
+          type: "input",
+          name: "officeNumber",
+          message: "What is your office number?",
+          validate: (answer) => {
+            if (answer !== "") {
+              return true;
+            } else {
+              return "Please enter an office number";
+            }
+          },
+        },
+        {
+          type: "list",
+          name: "continue",
+          message: "Do you want to continue to add more members?",
+          choices: ["No", "Yes"],
+        },
+      ])
+      .then((answers) => {
+        const manager = new Manager(
+          answers.name,
+          answers.email,
+          answers.id,
+          answers.officeNumber
+        );
+        membersArray.push(manager);
+        if (answers.continue === "Yes") {
+          promptUser();
+        } else {
+          console.log(membersArray);
+          fs.writeFile(outputPath, render(membersArray), function (err) {
+            if (err) {
+              console.log(err);
+            }
+            console.log("Success");
+          });
+        }
+      });
+  }
+  function questionIntern() {
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          name: "name",
+          message: "What is your Intern's name?",
+        },
+        {
+          type: "input",
+          name: "email",
+          message: "What is your Intern's Email?",
+          validate: (answer) => {
+            if (answer !== "") {
+              return true;
+            } else {
+              return "Please enter an email";
+            }
+          },
+        },
+        {
+          type: "input",
+          name: "id",
+          message: "What is your Intern's employee Id?",
+          validate: (answer) => {
+            if (answer !== "") {
+              return true;
+            } else {
+              return "Please enter an Id number";
+            }
+          },
+        },
+        {
+          type: "input",
+          name: "school",
+          message: "What is your school's name?",
+          validate: (answer) => {
+            if (answer !== "") {
+              return true;
+            } else {
+              return "Please enter a school name";
+            }
+          },
+        },
+        {
+          type: "list",
+          name: "continue",
+          message: "Do you want to continue to add more members?",
+          choices: ["No", "Yes"],
+        },
+      ])
+      .then((answers) => {
+        const intern = new Intern(
+          answers.name,
+          answers.email,
+          answers.id,
+          answers.school
+        );
+        membersArray.push(intern);
+        if (answers.continue === "Yes") {
+          promptUser();
+        } else {
+          console.log(membersArray);
+          fs.writeFile(outputPath, render(membersArray), function (err) {
+            if (err) {
+              console.log(err);
+            }
+            console.log("Success");
+          });
+        }
+      });
+  }
 }
 
 promptUser();
